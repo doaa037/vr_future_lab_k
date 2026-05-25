@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VR Future Lab — حزمة المراجعة التنفيذية</title>
+<style>
+  :root {
+    --primary: #0f2d5c;
+    --accent: #1a6fbf;
+    --light-accent: #e8f1fb;
+    --success: #1a7a4a;
+    --warning: #b35a00;
+    --danger: #b30000;
+    --text: #1a1a2e;
+    --muted: #5a6170;
+    --border: #d1dae8;
+    --bg: #f5f7fb;
+    --white: #ffffff;
+    --sidebar-w: 280px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--primary);
+    color: #fff;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .sidebar-logo {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+  }
+
+  .sidebar-subtitle {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+  }
+
+  .sidebar-nav { padding: 16px 0; flex: 1; }
+
+  .nav-section-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    padding: 12px 20px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-right: 3px solid transparent;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.07); }
+
+  .nav-item.active {
+    background: rgba(255,255,255,0.12);
+    border-right-color: #5ba4e8;
+  }
+
+  .nav-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    min-width: 20px;
+    padding-top: 2px;
+  }
+
+  .nav-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.4; }
+
+  .nav-item.active .nav-text { color: #fff; font-weight: 600; }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── Main ── */
+  #main {
+    margin-right: var(--sidebar-w);
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  /* ── Top bar ── */
+  #topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    gap: 20px;
+  }
+
+  .topbar-breadcrumb {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .topbar-breadcrumb span { color: var(--primary); font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-prototype { background: #fff3e0; color: #b35a00; }
+  .badge-confidential { background: #fde8e8; color: #b30000; }
+  .badge-may2026 { background: var(--light-accent); color: var(--accent); }
+
+  /* ── Content area ── */
+  .page { display: none; padding: 48px 56px 80px; max-width: 900px; }
+  .page.active { display: block; }
+
+  /* ── Page hero ── */
+  .doc-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #1a4a8a 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 40px 44px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doc-hero::after {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+
+  .doc-number {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 10px;
+  }
+
+  .doc-hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .doc-hero .doc-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 18px;
+  }
+
+  .hero-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .hero-badge {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  /* ── Typography ── */
+  .page h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 36px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .page h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 10px;
+  }
+
+  .page h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    margin: 18px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .page p { margin-bottom: 14px; font-size: 15px; }
+
+  .page ul, .page ol {
+    margin: 10px 0 16px 0;
+    padding-right: 24px;
+  }
+
+  .page li { margin-bottom: 7px; font-size: 15px; }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; margin: 20px 0; border-radius: 10px; border: 1px solid var(--border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+  thead { background: var(--primary); color: #fff; }
+
+  thead th {
+    padding: 12px 16px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--light-accent); }
+  tbody td { padding: 11px 16px; vertical-align: top; }
+  tbody tr:nth-child(even) { background: #f9fbff; }
+
+  /* ── Callouts ── */
+  .callout {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .callout-body { flex: 1; font-size: 14px; line-height: 1.6; }
+  .callout-body strong { display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: 0.3px; }
+
+  .callout-warning { background: #fff8e6; border: 1px solid #f5c842; }
+  .callout-warning .callout-body { color: #7a5500; }
+  .callout-danger { background: #fff0f0; border: 1px solid #f5a0a0; }
+  .callout-danger .callout-body { color: #7a0000; }
+  .callout-info { background: var(--light-accent); border: 1px solid #a0c4f5; }
+  .callout-info .callout-body { color: #0a3060; }
+  .callout-success { background: #f0fbf4; border: 1px solid #7dd4a0; }
+  .callout-success .callout-body { color: #0a4025; }
+
+  /* ── Cards ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    border-top: 3px solid var(--accent);
+  }
+
+  .card-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .card-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── Status badges ── */
+  .status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .status-green { background: #e6f7ef; color: #1a7a4a; }
+  .status-red { background: #fde8e8; color: #b30000; }
+  .status-orange { background: #fff3e0; color: #b35a00; }
+  .status-yellow { background: #fffce0; color: #7a6a00; }
+  .status-blue { background: var(--light-accent); color: var(--accent); }
+
+  /* ── Risk levels ── */
+  .risk-critical { color: #b30000; font-weight: 700; }
+  .risk-high { color: #b35a00; font-weight: 700; }
+  .risk-medium { color: #7a6a00; font-weight: 700; }
+
+  /* ── Phase blocks ── */
+  .phase-block {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 24px 0;
+    overflow: hidden;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .phase-num {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .phase-title { font-size: 16px; font-weight: 700; }
+  .phase-meta { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+  .phase-body { padding: 20px 24px; background: var(--white); }
+
+  .phase-body h4 { color: var(--accent); font-size: 12px; margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .phase-body ul { padding-right: 20px; }
+  .phase-body li { font-size: 14px; margin-bottom: 6px; }
+
+  /* ── Decision box ── */
+  .decision-box {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 32px 0;
+    text-align: center;
+  }
+
+  .decision-box h3 { color: #fff; font-size: 18px; margin-bottom: 12px; }
+  .decision-box p { color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 20px; }
+
+  .decision-options { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .decision-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: default;
+  }
+
+  .decision-btn.primary { background: #5ba4e8; border-color: #5ba4e8; }
+
+  /* ── One-pager ── */
+  .onepage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+
+  .onepage-cell {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .onepage-cell h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    border-bottom: none;
+  }
+
+  .onepage-cell p { font-size: 14px; margin-bottom: 0; }
+
+  /* ── Print ── */
+  @media print {
+    #sidebar { display: none; }
+    #main { margin-right: 0; }
+    #topbar { display: none; }
+    .page { display: block !important; page-break-after: always; }
+  }
+
+  @media (max-width: 768px) {
+    #sidebar { display: none; }
+    #main { margin-right: 0; }
+    .page { padding: 24px 20px 60px; }
+  }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  blockquote {
+    border-right: 4px solid var(--accent);
+    padding: 12px 18px;
+    background: var(--light-accent);
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+    font-size: 15px;
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  /* ── Journey flow ── */
+  .journey {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 20px 0;
+  }
+
+  .journey-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .journey-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    border: 2px solid var(--white);
+    box-shadow: 0 0 0 2px var(--accent);
+    z-index: 1;
+    position: relative;
+  }
+
+  .journey-line {
+    width: 2px;
+    height: 28px;
+    background: var(--border);
+    margin-right: 6px;
+  }
+
+  .journey-text { font-size: 14px; color: var(--text); }
+
+  /* ── Summary strip ── */
+  .summary-strip {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 24px 0;
+  }
+
+  .strip-item {
+    flex: 1;
+    min-width: 140px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .strip-icon { font-size: 24px; margin-bottom: 6px; }
+  .strip-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .strip-value { font-size: 15px; font-weight: 700; color: var(--primary); margin-top: 4px; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Executive Package</div>
+    <div class="sidebar-title">VR Future Lab</div>
+    <div class="sidebar-subtitle">AI-Powered Immersive STEM Platform</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section-label">الوثائق التنفيذية</div>
+    <div class="nav-item active" onclick="showPage('p00')">
+      <span class="nav-num">00</span>
+      <span class="nav-text">الفهرس العام</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p01')">
+      <span class="nav-num">01</span>
+      <span class="nav-text">الملخص التنفيذي</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p02')">
+      <span class="nav-num">02</span>
+      <span class="nav-text">الملف الأكاديمي</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p03')">
+      <span class="nav-num">03</span>
+      <span class="nav-text">المراجعة التقنية</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p04')">
+      <span class="nav-num">04</span>
+      <span class="nav-text">وثيقة رؤية المنتج</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p05')">
+      <span class="nav-num">05</span>
+      <span class="nav-text">خارطة التطوير</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p06')">
+      <span class="nav-num">06</span>
+      <span class="nav-text">القيمة الاستراتيجية</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p07')">
+      <span class="nav-num">07</span>
+      <span class="nav-text">تقرير المخاطر</span>
+    </div>
+    <div class="nav-item" onclick="showPage('p08')">
+      <span class="nav-num">08</span>
+      <span class="nav-text">ملخص للرئيس — صفحة واحدة</span>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    مراجعة مستقلة — مايو 2026<br>
+    بناءً على مستودع GitHub العام
+  </div>
+</nav>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div id="main">
+  <div id="topbar">
+    <div class="topbar-breadcrumb">
+      VR Future Lab &rsaquo; <span id="topbar-section">الفهرس العام</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="badge badge-prototype">Prototype Stage</span>
+      <span class="badge badge-confidential">Confidential</span>
+      <span class="badge badge-may2026">May 2026</span>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 00 — INDEX ══ -->
+  <div id="p00" class="page active">
+    <div class="doc-hero">
+      <div class="doc-number">الفهرس العام</div>
+      <h1>حزمة المراجعة التنفيذية</h1>
+      <div class="doc-subtitle">VR Future Lab — AI-Powered Immersive STEM Learning Platform</div>
+      <div class="hero-badges">
+        <span class="hero-badge">8 وثائق تنفيذية</span>
+        <span class="hero-badge">مراجعة أكاديمية وتقنية</span>
+        <span class="hero-badge">للإدارة العليا</span>
+        <span class="hero-badge">مايو 2026</span>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body">
+        <strong>ملاحظة أساسية للقارئ</strong>
+        المستودع المراجَع يحتوي على README وثلاث صور فقط. الكود المصدري <strong>غير موجود في المستودع</strong> — كما يصرّح الـ README صراحةً. يوجد APK (~350 MB) مستضاف على Google Drive ومُختبَر على Meta Quest 3. جميع الوثائق تُفرّق بوضوح بين ما هو موجود حالياً وما هو رؤية مستقبلية.
+      </div>
+    </div>
+
+    <h2>ما الموجود في المستودع؟</h2>
+    <div class="summary-strip">
+      <div class="strip-item">
+        <div class="strip-icon">📱</div>
+        <div class="strip-label">تطبيق VR</div>
+        <div class="strip-value"><span class="status status-green">✓ موجود</span></div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">📸</div>
+        <div class="strip-label">صور توضيحية</div>
+        <div class="strip-value"><span class="status status-green">3 صور</span></div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">💻</div>
+        <div class="strip-label">الكود المصدري</div>
+        <div class="strip-value"><span class="status status-red">✗ غير متاح</span></div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">🤖</div>
+        <div class="strip-label">ميزات AI</div>
+        <div class="strip-value"><span class="status status-red">✗ غير موجودة</span></div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">👩‍🏫</div>
+        <div class="strip-label">لوحة معلم</div>
+        <div class="strip-value"><span class="status status-red">✗ غير موجودة</span></div>
+      </div>
+    </div>
+
+    <h2>دليل الوثائق</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>الوثيقة</th><th>الجمهور المستهدف</th><th>الهدف</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>01</td><td><strong>الملخص التنفيذي</strong></td><td>جميع القيادة</td><td>نظرة شاملة: ما هو، لماذا يهم، ما المطلوب</td></tr>
+          <tr><td>02</td><td><strong>الملف الأكاديمي</strong></td><td>القيادة الأكاديمية، لجان البحث</td><td>الأسس التربوية، القيمة البحثية، إمكانية النشر</td></tr>
+          <tr><td>03</td><td><strong>المراجعة التقنية</strong></td><td>القيادة التقنية، لجان IT</td><td>الحالة التقنية الصادقة، الثغرات، التوصيات</td></tr>
+          <tr><td>04</td><td><strong>وثيقة رؤية المنتج</strong></td><td>القيادة الاستراتيجية</td><td>ما الذي يجب أن تصبح عليه المنصة</td></tr>
+          <tr><td>05</td><td><strong>خارطة التطوير</strong></td><td>الإدارة وفرق المشروع</td><td>6 مراحل تفصيلية بمخرجات وأفرقة وجداول زمنية</td></tr>
+          <tr><td>06</td><td><strong>القيمة الاستراتيجية</strong></td><td>الإدارة العليا، مجلس الأمناء</td><td>لماذا يهم المشروع استراتيجياً للمؤسسة</td></tr>
+          <tr><td>07</td><td><strong>تقرير المخاطر</strong></td><td>صانعو القرار، اللجانة القانونية</td><td>12 خطراً مصنفاً مع التخفيف</td></tr>
+          <tr><td>08</td><td><strong>ملخص للرئيس</strong></td><td>الرئيس، مجلس الأمناء</td><td>صفحة واحدة — الفكرة والقرار المطلوب</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>الإجراءات العاجلة الثلاثة</h2>
+    <div class="card-grid">
+      <div class="card" style="border-top-color:#b30000">
+        <div class="card-title">🔴 نقل الكود المصدري</div>
+        <div class="card-body">نقل الكود إلى مستودع مؤسسي هذا الأسبوع. بدون هذا، أي استثمار في خطر.</div>
+      </div>
+      <div class="card" style="border-top-color:#b30000">
+        <div class="card-title">🔴 توثيق الملكية الفكرية</div>
+        <div class="card-body">اتفاقية قانونية تُثبت ملكية المؤسسة قبل أي تمويل أو عرض خارجي.</div>
+      </div>
+      <div class="card" style="border-top-color:#b30000">
+        <div class="card-title">🔴 مراجعة تقنية متخصصة</div>
+        <div class="card-body">تكليف مطور خبير بـ Unity/Meta Quest لمراجعة 6-8 أسابيع قبل الالتزام بالتطوير.</div>
+      </div>
+    </div>
+
+    <blockquote>الرؤية التربوية قوية وإثبات المفهوم موجود. البنية التحتية اللازمة لتحقيق هذه الرؤية غائبة في معظمها. مع استثمار منظم وتطوير مرحلي صادق، يمكن لهذا المشروع أن يصبح أصلاً مؤسسياً بالغ الأهمية.</blockquote>
+  </div>
+
+  <!-- ══ PAGE 01 — EXECUTIVE SUMMARY ══ -->
+  <div id="p01" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 01</div>
+      <h1>الملخص التنفيذي</h1>
+      <div class="doc-subtitle">للإدارة العليا في المؤسسة الأكاديمية</div>
+      <div class="hero-badges">
+        <span class="hero-badge">سري</span>
+        <span class="hero-badge">مايو 2026</span>
+      </div>
+    </div>
+
+    <h2>ما هو هذا المشروع؟</h2>
+    <p><strong>VR Future Lab</strong> هو تطبيق واقع افتراضي مصمم للسماح للطلاب بإجراء تجارب علمية في بيئة رقمية آمنة وغامرة — دون الحاجة إلى مختبر فيزيائي. يعمل التطبيق حالياً على نظارة <strong>Meta Quest 3</strong> ويُوزَّع كملف APK بحجم ~350 MB.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-body">
+        <strong>الحالة الراهنة للمستودع</strong>
+        يحتوي مستودع GitHub على ثلاث صور توضيحية وملف README فقط. الكود المصدري غير مستضاف علناً. هذه الوثيقة تقيّم المشروع بناءً على الأدلة المتاحة.
+      </div>
+    </div>
+
+    <h2>ما المشكلة التي يعالجها؟</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>التحدي</th><th>الواقع الميداني</th></tr></thead>
+        <tbody>
+          <tr><td>شُح المختبرات</td><td>نسبة كبيرة من المدارس تفتقر إلى مختبرات علمية وظيفية</td></tr>
+          <tr><td>ارتفاع تكلفة المواد</td><td>الكواشف والمعدات باهظة التكلفة</td></tr>
+          <tr><td>مخاطر السلامة</td><td>تجارب الكيمياء والكهرباء والأحياء تنطوي على مخاطر حقيقية</td></tr>
+          <tr><td>تجربة لمرة واحدة</td><td>لا يمكن للطلاب إعادة التجربة بسبب التكلفة والوقت</td></tr>
+          <tr><td>فجوات التعلم</td><td>الطلاب الأضعف لا يستطيعون التباطؤ أو التكرار</td></tr>
+          <tr><td>التفاوت الجغرافي</td><td>مدارس الأطراف والمجتمع العربي الأكثر تضرراً</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>لماذا هو مهم استراتيجياً؟</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">من سلبي إلى تجريبي</div>
+        <div class="card-body">الطلاب لا يشاهدون التجارب — بل يُجرونها بأيديهم في بيئة افتراضية.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">من موحّد إلى مُخصَّص</div>
+        <div class="card-body">يمكن لكل طالب أن يتعلم بوتيرته الخاصة ويكرر بلا حرج.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">من حصري إلى شامل</div>
+        <div class="card-body">كل مدرسة بغض النظر عن ميزانيتها تستطيع تقديم تجربة مختبرية.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">من خطِر إلى آمن</div>
+        <div class="card-body">التجارب الخطرة تصبح قابلة للاستكشاف بلا مخاطر حقيقية.</div>
+      </div>
+    </div>
+
+    <h2>القيمة المضافة للمؤسسة</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>مجال القيمة</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><strong>الريادة الأكاديمية</strong></td><td>تموضع المؤسسة كرائدة في تعليم STEM الغامر في العالم العربي</td></tr>
+          <tr><td><strong>الإمكانية البحثية</strong></td><td>أساس طبيعي لأبحاث محكّمة في EdTech وتعلم VR</td></tr>
+          <tr><td><strong>جاذبية التمويل</strong></td><td>التأثير الاجتماعي للمشروع يتوافق مع أولويات الجهات المانحة</td></tr>
+          <tr><td><strong>الظهور المؤسسي</strong></td><td>قابل للعرض أمام الوزارة والمؤتمرات الدولية والمستثمرين</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>القرار المطلوب من الإدارة</h2>
+    <div class="decision-box">
+      <h3>ثلاثة مسارات محتملة</h3>
+      <p>يحتاج المشروع قراراً مؤسسياً رسمياً على أحد المسارات التالية:</p>
+      <div class="decision-options">
+        <div class="decision-btn primary">المسار 1: استثمار وتطوير (موصى به)</div>
+        <div class="decision-btn">المسار 2: شراكة وتوسع</div>
+        <div class="decision-btn">المسار 3: توقف ومراجعة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 02 — ACADEMIC PROFILE ══ -->
+  <div id="p02" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 02</div>
+      <h1>الملف الأكاديمي التعريفي</h1>
+      <div class="doc-subtitle">الخلفية التربوية، الأسس البيداغوجية، والقيمة البحثية</div>
+      <div class="hero-badges">
+        <span class="hero-badge">للقيادة الأكاديمية</span>
+        <span class="hero-badge">لجان البحث</span>
+      </div>
+    </div>
+
+    <h2>1. السياق التعليمي</h2>
+    <p>يواجه تعليم العلوم في المنطقة العربية عجزاً هيكلياً موثقاً. المناهج الوطنية تستوجب التعليم المختبري في الفيزياء والكيمياء والأحياء — غير أن البنية التحتية المختبرية في كثير من المدارس الحكومية، ولا سيما في المناطق العربية والأطراف، تبقى قاصرة أو معدومة.</p>
+
+    <h2>2. الأسس النظرية البيداغوجية</h2>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <div class="phase-num">1</div>
+        <div>
+          <div class="phase-title">نظرية التعلم التجريبي — Kolb (1984)</div>
+          <div class="phase-meta">Experiential Learning Theory</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p>التعلم الأكثر فاعلية يتبع دورة: <strong>تجربة ملموسة ← ملاحظة تأملية ← مفهمة مجردة ← تجريب فعّال</strong>. بيئات VR تدعم هذه الدورة بطبيعتها: الطالب يتصرف ويلاحظ النتائج ويفكر ويعيد المحاولة.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <div class="phase-num">2</div>
+        <div>
+          <div class="phase-title">نظرية البنائية — Vygotsky & Piaget</div>
+          <div class="phase-meta">Constructivist Learning Theory</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p>المعرفة تُبنى من خلال التفاعل النشط مع البيئة، لا من خلال الاستقبال السلبي. بيئات VR تُلزم الطالب بالتفاعل — مما يجعلها بنائية بطبيعتها.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <div class="phase-num">3</div>
+        <div>
+          <div class="phase-title">التعلم القائم على الاستفسار — IBL</div>
+          <div class="phase-meta">Inquiry-Based Learning</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p>بدلاً من تقديم نتائج محددة مسبقاً، يُتيح المختبر الافتراضي للطلاب طرح أسئلة، تصميم تجارب، واستخلاص استنتاجات مبنية على الأدلة.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <div class="phase-num">4</div>
+        <div>
+          <div class="phase-title">التعلم المتمايز — Tomlinson (1999)</div>
+          <div class="phase-meta">Differentiated Instruction</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p>القدرة على التكرار والإيقاف وتعديل الصعوبة وتلقي تغذية راجعة فردية — هذه هي جوهر التعليم المتمايز. منصات VR قادرة على تشغيل هذه المبادئ بطرق لا تستطيعها بيئة الفصل التقليدية.</p>
+      </div>
+    </div>
+
+    <h2>3. إمكانية النشر الأكاديمي</h2>
+    <p>المشروع، حين يصل إلى مرحلة التجريب الميداني مع بيانات تجريبية مرافقة، يدعم النشر في مجلات عالية الأثر:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>المجلة</th><th>الناشر</th><th>الصلة</th></tr></thead>
+        <tbody>
+          <tr><td><em>Computers & Education</em></td><td>Elsevier</td><td>عالية جداً</td></tr>
+          <tr><td><em>Journal of Science Education and Technology</em></td><td>Springer</td><td>عالية جداً</td></tr>
+          <tr><td><em>British Journal of Educational Technology</em></td><td>Wiley</td><td>عالية</td></tr>
+          <tr><td><em>Interactive Learning Environments</em></td><td>Taylor & Francis</td><td>عالية</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>4. أسئلة بحثية مقترحة</h2>
+    <ul>
+      <li>هل تجربة المختبر الافتراضي تُنتج فهماً مفاهيمياً مماثلاً أو متفوقاً على المختبر الفيزيائي؟</li>
+      <li>ما أثر التعلم الغامر في STEM على طلاب المدارس ذات الموارد المحدودة؟</li>
+      <li>كيف تؤثر تدخلات التعليم بالذكاء الاصطناعي داخل بيئات VR على مخرجات تعلم الطلاب الناطقين بالعربية؟</li>
+      <li>ما الفروق في الانخراط والدافعية بين التعليم المختبري عبر VR مقارنةً بالتعلم من الكتب المدرسية؟</li>
+    </ul>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">📋</span>
+      <div class="callout-body">
+        <strong>حدود الادعاءات الأكاديمية الحالية</strong>
+        المشروع لم يخضع بعد لتقييم تربوي رسمي، ولا لقياس مخرجات التعلم، ولا لبحث قابلية الاستخدام مع الطلاب المستهدفين، ولا لأي مراجعة أكاديمية محكّمة. هذه الخطوات الضرورية التالية — وليست انتقادات.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 03 — TECHNICAL REVIEW ══ -->
+  <div id="p03" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 03</div>
+      <h1>ملخص المراجعة التقنية</h1>
+      <div class="doc-subtitle">تقييم صادق للحالة التقنية الراهنة — للإدارة غير التقنية</div>
+      <div class="hero-badges">
+        <span class="hero-badge">القيادة التقنية</span>
+        <span class="hero-badge">لجان IT</span>
+      </div>
+    </div>
+
+    <div class="callout callout-danger">
+      <span class="callout-icon">🔍</span>
+      <div class="callout-body">
+        <strong>حدود هذه المراجعة</strong>
+        تستند هذه المراجعة إلى الأدلة المتاحة: ملف APK، ثلاث صور، ملف README. الكود المصدري غير متاح للمراجعة المباشرة. جميع التقييمات التقنية هي استنتاجات مبنية على هذه الأدلة غير المباشرة.
+      </div>
+    </div>
+
+    <h2>1. ما الموجود حالياً</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>المكوّن</th><th>الحالة</th><th>الدليل</th></tr></thead>
+        <tbody>
+          <tr><td>تطبيق VR يعمل (APK)</td><td><span class="status status-green">✓ موجود</span></td><td>APK على Google Drive (~350 MB)</td></tr>
+          <tr><td>توافق Meta Quest 3</td><td><span class="status status-green">✓ مؤكد</span></td><td>README: "Tested on Meta Quest 3"</td></tr>
+          <tr><td>الكود المصدري</td><td><span class="status status-red">✗ غير متاح</span></td><td>README: "Source code not included"</td></tr>
+          <tr><td>منصة ويب أو بوابة</td><td><span class="status status-red">✗ غير موجودة</span></td><td>لا دليل في المستودع</td></tr>
+          <tr><td>لوحة تحكم للمعلم</td><td><span class="status status-red">✗ غير موجودة</span></td><td>لا دليل في المستودع</td></tr>
+          <tr><td>ذكاء اصطناعي / تكيّف</td><td><span class="status status-red">✗ غير موجود</span></td><td>لا دليل في المستودع</td></tr>
+          <tr><td>نظام تحليلات</td><td><span class="status status-red">✗ غير موجود</span></td><td>لا دليل في المستودع</td></tr>
+          <tr><td>متعدد المستخدمين / شبكي</td><td><span class="status status-yellow">؟ غير معروف</span></td><td>لا دليل متاح</td></tr>
+          <tr><td>توثيق تقني</td><td><span class="status status-orange">⚠ ضئيل</span></td><td>README فقط (16 سطراً)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>2. مستوى الجاهزية التقنية</h2>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;margin:20px 0;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+        <div style="font-size:13px;color:var(--muted);min-width:160px;">غير جاهز</div>
+        <div style="flex:1;height:8px;background:var(--border);border-radius:4px;position:relative;">
+          <div style="position:absolute;right:0;top:0;height:100%;width:33%;background:linear-gradient(90deg,#b30000,#f0a000);border-radius:4px;"></div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);min-width:100px;text-align:left;">جاهز للإنتاج</div>
+      </div>
+      <div style="text-align:center;font-size:15px;font-weight:700;color:var(--primary);">النقطة الحالية: Functional Prototype (جهاز واحد، مستخدم واحد، بلا backend)</div>
+    </div>
+
+    <h2>3. نقاط القوة التقنية</h2>
+    <div class="card-grid">
+      <div class="card" style="border-top-color:var(--success)">
+        <div class="card-title">✅ إثبات المفهوم محقق</div>
+        <div class="card-body">أصعب حاجز — بناء شيء يعمل فعلاً داخل نظارة VR — تم اجتيازه. الـ APK وظيفي ومُختبَر.</div>
+      </div>
+      <div class="card" style="border-top-color:var(--success)">
+        <div class="card-title">✅ اختيار المنصة صحيح</div>
+        <div class="card-body">Meta Quest 3 مستقل (لا يحتاج كمبيوتر)، مناسب للمدارس. قرار معماري سليم.</div>
+      </div>
+      <div class="card" style="border-top-color:var(--success)">
+        <div class="card-title">✅ نموذج التوزيع ملائم</div>
+        <div class="card-body">توزيع APK عبر Sideload هو النهج المعياري للتطبيقات التعليمية على Meta Quest.</div>
+      </div>
+    </div>
+
+    <h2>4. نقاط الضعف والثغرات</h2>
+
+    <div class="callout callout-danger">
+      <span class="callout-icon">🔴</span>
+      <div class="callout-body">
+        <strong>الكود المصدري خارج السيطرة المؤسسية</strong>
+        أخطر ثغرة تقنية. إذا غاب المطور الأصلي، لا يمكن تعديل التطبيق أو استمراره أو إعادة بنائه. هذا خطر كارثي على الاستمرارية.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>بنية أحادية الجهاز / أحادية المستخدم</strong>
+        لا يوجد تتبع لتقدم الطلاب، ولا رؤية للمعلم، ولا استمرارية بين الجلسات. البيانات لا تذهب إلى أي مكان.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>لا بنية تحتية خلفية (Backend)</strong>
+        لا خادم، ولا قاعدة بيانات، ولا سحابة. التطبيق لا يستطيع حفظ بيانات الطلاب أو مزامنة الأجهزة أو إعداد تقارير للمعلمين.
+      </div>
+    </div>
+
+    <h2>5. توصيات تقنية</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الأولوية</th><th>الإجراء</th><th>الإطار الزمني</th></tr></thead>
+        <tbody>
+          <tr><td><span class="risk-critical">🔴 فوري</span></td><td>نقل الكود المصدري إلى مستودع مؤسسي خاص</td><td>هذا الأسبوع</td></tr>
+          <tr><td><span class="risk-critical">🔴 فوري</span></td><td>تأكيد إعادة بناء التطبيق من المصدر</td><td>أسبوع 1-2</td></tr>
+          <tr><td><span class="risk-high">🟠 قريب</span></td><td>مراجعة تقنية متخصصة (Unity/Meta Quest)</td><td>6-8 أسابيع</td></tr>
+          <tr><td><span class="risk-high">🟠 قريب</span></td><td>مراجعة تراخيص الأصول ثلاثية الأطراف</td><td>مع المراجعة التقنية</td></tr>
+          <tr><td><span class="risk-medium">🟡 متوسط</span></td><td>تحديد الـ stack التقني للمنصة الكاملة</td><td>خلال 3 أشهر</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 04 — PRODUCT VISION ══ -->
+  <div id="p04" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 04</div>
+      <h1>وثيقة رؤية المنتج</h1>
+      <div class="doc-subtitle">من نموذج أولي إلى منصة STEM غامرة قابلة للتوسع</div>
+      <div class="hero-badges">
+        <span class="hero-badge">القيادة الاستراتيجية</span>
+        <span class="hero-badge">رؤية 24-36 شهراً</span>
+      </div>
+    </div>
+
+    <blockquote>يجب أن يتطور VR Future Lab من عرض توضيحي أحادي الجهاز إلى منصة STEM غامرة متكاملة، مدعومة بالذكاء الاصطناعي، وتدعم المعلم، ومحركة بالتحليلات — قابلة للوصول لكل طالب بصرف النظر عن بنية مدرسته التحتية.</blockquote>
+
+    <h2>تطبيق أم منصة؟ — الفرق الاستراتيجي</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>تطبيق</th><th>منصة</th></tr></thead>
+        <tbody>
+          <tr><td>مستخدم واحد، جهاز واحد</td><td>مستخدمون متعددون، مدارس متعددة، نظام واحد</td></tr>
+          <tr><td>المحتوى ثابت</td><td>المحتوى قابل للتحديث والتوسع ومتوافق مع المنهج</td></tr>
+          <tr><td>لا تغادر البيانات الجهاز</td><td>بيانات التعلم تُلتقط وتُحلَّل ويُتصرف بناءً عليها</td></tr>
+          <tr><td>لا دور للمعلم</td><td>المعلمون أصحاب دور محوري بصلاحيات ورؤية كاملة</td></tr>
+          <tr><td>لا يمكن توسيعه</td><td>يتوسع من مدرسة واحدة إلى مئات المدارس فالوطني</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>مكونات المنصة الكاملة</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">🥽 بيئة VR المختبرية</div>
+        <div class="card-body">مختبرات فيزياء وكيمياء وأحياء وعلوم أرض — متوافقة مع المنهج — بالعربية والعبرية والإنجليزية.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🤖 مرشد AI — "دليل المختبر"</div>
+        <div class="card-body">مرشد ذكي داخل VR يقدم إرشادات سياقية، يجيب على أسئلة الطلاب، ويتكيف مع مستواهم.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">👩‍🏫 لوحة تحكم المعلم</div>
+        <div class="card-body">واجهة ويب تُمكّن المعلم من تعيين التجارب، مراقبة الجلسات، ومراجعة أداء الطلاب.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 محرك التحليلات</div>
+        <div class="card-body">نظام خلفي يلتقط بيانات التفاعل، يُنشئ ملفات تعلم فردية، ويُنبّه للطلاب المتعثرين.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏫 بوابة الإدارة متعددة المدارس</div>
+        <div class="card-body">تُمكّن إدارات المناطق والوزارة من متابعة النتائج عبر شبكة المدارس.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📝 نظام إدارة المحتوى</div>
+        <div class="card-body">يُتيح للمعلمين (لا المطورين) تحديث محتوى التجارب وإضافة تجارب جديدة.</div>
+      </div>
+    </div>
+
+    <h2>رحلة المستخدم — الطالب</h2>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;margin:20px 0;">
+      <div class="journey">
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">الطالب يدخل الفصل — المعلم يُعيّن التجربة عبر لوحة التحكم</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">الطالب يضع نظارة Meta Quest 3</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">يدخل المختبر الافتراضي — مرشد AI يقدم التجربة (30 ثانية)</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">الطالب يُجري خطوات التجربة تفاعلياً</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">مرشد AI يتدخل عند التوقف أو الخطأ — يسقّل بلا يعطي الإجابة</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">اكتمال التجربة — الطالب يلاحظ النتائج</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">3 أسئلة للتأمل — يُجاب عليها داخل VR</div></div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><div class="journey-dot"></div><div class="journey-text">بيانات الجلسة تُحفظ وتُزامَن مع لوحة المعلم</div></div>
+      </div>
+    </div>
+
+    <h2>تعريف الـ MVP — الحد الأدنى من المنتج القابل للتطبيق</h2>
+    <div class="callout callout-info">
+      <span class="callout-icon">🎯</span>
+      <div class="callout-body">
+        <strong>الـ MVP هو أصغر نسخة من المنصة ذات فائدة حقيقية لمدرسة</strong>
+        يتطلب: 5 تجارب كاملة متوافقة مع المنهج + واجهة عربية + لوحة معلم أساسية + تحليلات بسيطة + backend لحفظ التقدم + يعمل على 5 نظارات في وقت واحد. لا يتطلب مرشد AI الكامل أو بوابة الإدارة متعددة المدارس.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 05 — ROADMAP ══ -->
+  <div id="p05" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 05</div>
+      <h1>خارطة التطوير المقترحة</h1>
+      <div class="doc-subtitle">خطة تنفيذ مرحلية — من النموذج الأولي إلى المنصة الوطنية</div>
+      <div class="hero-badges">
+        <span class="hero-badge">6 مراحل</span>
+        <span class="hero-badge">24-36 شهراً</span>
+        <span class="hero-badge">للإدارة وفرق المشروع</span>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">📌</span>
+      <div class="callout-body">
+        <strong>دليل القراءة</strong>
+        كل مرحلة تبني على السابقة. المرحلتان 1 و2 شرط لكل ما يليهما. لا تنتقل إلى المرحلة 3 قبل إتمام المرحلة 2.
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header" style="background:#b30000;">
+        <div class="phase-num">1</div>
+        <div>
+          <div class="phase-title">المراجعة التقنية والاستقرار</div>
+          <div class="phase-meta">Technical Audit & Stabilization | 6-8 أسابيع | 🔴 حرج</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <h4>الهدف</h4>
+        <p>فهم ما تم بناؤه، تأمين الملكية الفكرية، وإنشاء أساس مستقر للتطوير المستمر.</p>
+        <h4>المخرجات</h4>
+        <ul>
+          <li>الكود المصدري كاملاً منقولاً إلى مستودع مؤسسي خاص</li>
+          <li>تقرير مراجعة تقنية: المحرك، الإصدارات، التبعيات، عملية البناء</li>
+          <li>تأكيد إعادة البناء الناجحة للـ APK من المصدر</li>
+          <li>مراجعة تراخيص جميع الأصول ثلاثية الأطراف</li>
+          <li>سجل المخاطر: ما يحتاج إعادة بناء، ما ينقصه</li>
+          <li>توثيق ملكية فكرية موقّع</li>
+        </ul>
+        <h4>الفريق المطلوب</h4>
+        <ul>
+          <li>مطور VR أول (Unity أو Unreal + خبرة Meta Quest)</li>
+          <li>مدير مشروع تقني</li>
+          <li>مراجعة قانونية لتوثيق الملكية الفكرية</li>
+        </ul>
+        <h4>الخطر الرئيسي</h4>
+        <p>الكود قد يكون غير مكتمل أو غير منظم — المطور الأصلي قد لا يتاح للمشاركة في نقل المعرفة.</p>
+        <h4>معيار النجاح</h4>
+        <p>مطور جديد يستطيع، بالمستودع والتوثيق فقط، بناء الـ APK وتشغيله بنجاح على Meta Quest 3.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header" style="background:#b35a00;">
+        <div class="phase-num">2</div>
+        <div>
+          <div class="phase-title">النموذج الأولي التعليمي (MVP)</div>
+          <div class="phase-meta">MVP Educational Prototype | 4-6 أشهر | 🔴 حرج</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <h4>الهدف</h4>
+        <p>تحويل العرض الحالي إلى نموذج تعليمي كامل مع 5 تجارب متوافقة مع المنهج ودعم للغة العربية.</p>
+        <h4>المخرجات</h4>
+        <ul>
+          <li>5 تجارب كاملة (3 فيزياء + 2 كيمياء كحد أدنى) مع سقالات تربوية</li>
+          <li>وثيقة توافق المنهج مع المعايير الوطنية (صفوف 7-10)</li>
+          <li>واجهة عربية كاملة داخل VR</li>
+          <li>تسجيل أساسي لبيانات الجلسة</li>
+          <li>دعم 3-5 نظارات في وقت واحد</li>
+          <li>دليل المعلم (5 صفحات PDF)</li>
+        </ul>
+        <h4>الفريق المطلوب</h4>
+        <ul>
+          <li>مطور VR رئيسي (دوام كامل)</li>
+          <li>خبير مناهج العلوم (دوام جزئي)</li>
+          <li>مترجم عربي / مصمم UX</li>
+          <li>مختبِر لضمان الجودة</li>
+        </ul>
+        <h4>الخطر الرئيسي</h4>
+        <p>دعم العربية (RTL) في بيئات VR يتطلب معالجة خاصة لإطار UI — غير بديهي تقنياً.</p>
+        <h4>معيار النجاح</h4>
+        <p>معلم علوم يستطيع الإشراف على فصل كامل لمدة 45 دقيقة وجمع تقرير بسيط.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header" style="background:#7a4a00;">
+        <div class="phase-num">3</div>
+        <div>
+          <div class="phase-title">مرشد AI + تحليلات التعلم</div>
+          <div class="phase-meta">AI Tutor + Learning Analytics | 4-6 أشهر | 🟠 عالي</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <h4>الهدف</h4>
+        <p>تضمين نظام إرشاد ذكي داخل بيئة VR وبناء محرك تحليلات يلتقط بيانات التعلم.</p>
+        <h4>المخرجات</h4>
+        <ul>
+          <li>مرشد AI v1.0 — محادثة (عربي/عبري/إنجليزي) مع سقالة سياقية</li>
+          <li>سقالة تكيّفية — يتعدّل تكرار الإرشادات وعمقها بناءً على سلوك الطالب</li>
+          <li>قاعدة بيانات بيانات التعلم الخلفية — آمنة وقابلة للامتثال</li>
+          <li>إطار الخصوصية — توافق مع قوانين حماية البيانات</li>
+        </ul>
+        <h4>الفريق المطلوب</h4>
+        <ul>
+          <li>مهندس AI/ML (خبرة NLP)</li>
+          <li>مطور Backend</li>
+          <li>محلل تعلم / متخصص تحليلات</li>
+          <li>مستشار علم نفس تعليمي (دوام جزئي)</li>
+        </ul>
+        <h4>الخطر الرئيسي</h4>
+        <p>زمن الاستجابة في VR يجب أن يكون أقل من ثانيتين. جودة NLP العربية قد تكون متفاوتة — تتطلب اختباراً مكثفاً.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header" style="background:#1a4a8a;">
+        <div class="phase-num">4</div>
+        <div>
+          <div class="phase-title">لوحة تحكم المعلم</div>
+          <div class="phase-meta">Teacher Dashboard | 2-3 أشهر | 🟠 عالي</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <h4>الهدف</h4>
+        <p>بناء واجهة ويب كاملة للمعلمين تمنحهم صلاحيات ورؤية حقيقية على تجارب التعلم.</p>
+        <h4>المخرجات</h4>
+        <ul>
+          <li>تطبيق ويب (يعمل على أي متصفح)</li>
+          <li>إدارة الفصل — قوائم الطلاب وتعيين التجارب</li>
+          <li>مراقبة مباشرة للجلسات</li>
+          <li>تقارير ما بعد الجلسة لكل طالب</li>
+          <li>تنبيهات التدخل للطلاب المتعثرين</li>
+          <li>تصدير التقارير (PDF)</li>
+        </ul>
+        <h4>الفريق المطلوب</h4>
+        <ul>
+          <li>مطور Frontend (React أو Vue.js)</li>
+          <li>مطور Backend (تكامل API)</li>
+          <li>مصمم UX (بحث تصميم متمحور حول المعلم)</li>
+          <li>مجموعة معلمين تجريبيين (3-5 معلمين)</li>
+        </ul>
+        <h4>الخطر الرئيسي</h4>
+        <p>اعتماد المعلمين يتطلب بساطة حقيقية — الإفراط في الميزات خطر حقيقي. واجهة عربية RTL من البداية لا كتعديل لاحق.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header" style="background:#1a5a3a;">
+        <div class="phase-num">5</div>
+        <div>
+          <div class="phase-title">التجريب متعدد المدارس</div>
+          <div class="phase-meta">Multi-School Pilot | 3-4 أشهر | 🟡 متوسط</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <h4>الهدف</h4>
+        <p>نشر المنصة في 3-5 مدارس وتوليد قاعدة أدلة تدعم التعامل مع الوزارة والنشر الأكاديمي.</p>
+        <h4>المخرجات</h4>
+        <ul>
+          <li>وثيقة تصميم التجريب — أسئلة بحثية، مقاييس، مجموعات مقارنة</li>
+          <li>برنامج تدريب المعلمين (يوم واحد)</li>
+          <li>موافقة أخلاقيات البحث (لحماية البيانات)</li>
+          <li>بيانات 6 أسابيع من الاستخدام والنتائج</li>
+          <li>تقرير تقييم التجريب</li>
+          <li>مسودة ورقة علمية أولى</li>
+        </ul>
+        <h4>معيار النجاح</h4>
+        <p>200 طالب على الأقل يكملون 3 جلسات VR عبر المدارس التجريبية، مع أدلة مبدئية على التأثير التعليمي.</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header" style="background:#3a1a6a;">
+        <div class="phase-num">6</div>
+        <div>
+          <div class="phase-title">التوسع الوزاري / الدولي</div>
+          <div class="phase-meta">Ministry / International Expansion | 6-12 أشهر | 🟢 استراتيجي</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <h4>الهدف</h4>
+        <p>الاستفادة من نتائج التجريب المُثبَتة للسعي نحو التبني الوطني والشراكات الدولية والنشر البحثي.</p>
+        <h4>المخرجات</h4>
+        <ul>
+          <li>حزمة عرض لوزارة التربية والتعليم</li>
+          <li>مقترح النشر الوطني — النموذج، التكلفة، البنية التحتية</li>
+          <li>عروض في مؤتمرات دولية (ISTE, EdMedia, AERA)</li>
+          <li>نشر بحثي محكّم (مقالتان على الأقل)</li>
+          <li>المنصة v2.0 — مكتبة موسعة (20+ تجربة)</li>
+        </ul>
+        <h4>الخطر الرئيسي</h4>
+        <p>التعامل مع الوزارة دورة مبيعات طويلة (18-36 شهراً عادةً). الاستدامة دون منح تمويلية تتطلب نموذج تجاري واضح.</p>
+      </div>
+    </div>
+
+    <h2>الجدول الزمني الإجمالي</h2>
+    <div class="summary-strip">
+      <div class="strip-item">
+        <div class="strip-icon">📅</div>
+        <div class="strip-label">المرحلتان 1+2</div>
+        <div class="strip-value">7-8 أشهر</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">📅</div>
+        <div class="strip-label">المرحلتان 3+4</div>
+        <div class="strip-value">6-9 أشهر</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">📅</div>
+        <div class="strip-label">المرحلة 5</div>
+        <div class="strip-value">3-4 أشهر</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">📅</div>
+        <div class="strip-label">المرحلة 6</div>
+        <div class="strip-value">6-12 شهراً</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-icon">🏁</div>
+        <div class="strip-label">الإجمالي</div>
+        <div class="strip-value">24-36 شهراً</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 06 — STRATEGIC VALUE ══ -->
+  <div id="p06" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 06</div>
+      <h1>القيمة الاستراتيجية للإدارة</h1>
+      <div class="doc-subtitle">لماذا يهم هذا المشروع للمؤسسة على المستوى الاستراتيجي</div>
+      <div class="hero-badges">
+        <span class="hero-badge">الإدارة العليا</span>
+        <span class="hero-badge">مجلس الأمناء</span>
+      </div>
+    </div>
+
+    <h2>الحجة الاستراتيجية المركزية</h2>
+    <blockquote>المؤسسات التعليمية التي تقود الابتكار يُتذكَّر لها ذلك. تلك التي تتبع لا يُتذكَّر لها. نافذة الريادة في مجال التعلم الغامر العربي مفتوحة الآن — ولن تبقى كذلك إلى الأبد.</blockquote>
+
+    <h2>1. التموضع الأكاديمي</h2>
+    <p>في قطاع التعليم العربي، لا توجد حالياً منصة VR للـ STEM مُتحقَّق منها ومملوكة مؤسسياً مع إمكانات تعليم بالذكاء الاصطناعي. المؤسسة التي تبني هذا ستكون:</p>
+    <ul>
+      <li><strong>المرجع</strong> في مؤتمرات EdTech والنقاشات الوزارية</li>
+      <li><strong>الشريك الطبيعي</strong> للمنح البحثية في مجال التعلم الغامر والذكاء الاصطناعي في التعليم</li>
+      <li><strong>المبتكر الظاهر</strong> في مجال يحظى باهتمام متزايد من الجهات المانحة والحكومات والمنظمات الدولية</li>
+    </ul>
+
+    <h2>2. التوافق مع المهمة المؤسسية</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">العدالة التعليمية</div>
+        <div class="card-body">ضمان تعليم جيد بصرف النظر عن الوضع الاقتصادي — VR Future Lab هو تعبير عملي مباشر عن هذه المهمة.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">تطوير المجتمع</div>
+        <div class="card-body">إعداد الطلاب للمشاركة الاقتصادية من خلال محو الأمية العلمية والتقنية.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">الصلة الثقافية واللغوية</div>
+        <div class="card-body">الواجهة العربية واللغة العبرية يعكسان التزاماً حقيقياً بخدمة المجتمع بشروطه الخاصة.</div>
+      </div>
+    </div>
+
+    <h2>3. كيفية التواصل مع وزارة التربية والتعليم</h2>
+    <p>عرض الوزارة لا يتطلب منصة مكتملة. يتطلب:</p>
+    <ul>
+      <li>عرضاً توضيحياً موثوقاً لما تفعله التقنية</li>
+      <li>دليلاً على التأسيس التربوي (توافق المنهج)</li>
+      <li>نموذج نشر واقعي</li>
+      <li>سردية عدالة واضحة</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">🏛️</span>
+      <div class="callout-body">
+        <strong>ما تشتريه الوزارة</strong>
+        ليس النموذج الأولي الحالي — بل التزام المؤسسة بتطويره إلى مورد قابل للنشر في المنظومة المدرسية الوطنية.
+      </div>
+    </div>
+
+    <h2>4. المؤتمرات الدولية</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>المؤتمر</th><th>التركيز</th><th>الصلة</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ISTE</strong></td><td>EdTech عالمياً</td><td>عالية — VR + AI في STEM</td></tr>
+          <tr><td><strong>EdMedia (AACE)</strong></td><td>الوسائط في التعليم</td><td>عالية — التعلم الغامر</td></tr>
+          <tr><td><strong>AERA</strong></td><td>البحث التربوي</td><td>عالية — التركيز على العدالة</td></tr>
+          <tr><td><strong>GITEX — مسار التقنية</strong></td><td>الابتكار الإقليمي</td><td>عالية — الرؤية الإقليمية</td></tr>
+          <tr><td><strong>World Education Forum</strong></td><td>السياسة التعليمية العالمية</td><td>استراتيجية</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>5. كيف تتحدث عن المشروع</h2>
+    <div class="callout callout-success">
+      <span class="callout-icon">✅</span>
+      <div class="callout-body">
+        <strong>ما يمكن قوله داخلياً الآن</strong>
+        "لدينا نموذج أولي وظيفي لمختبر VR بُني من قِبَل مجتمعنا. نحن نلتزم بتطويره إلى أداة تمنح كل طالب، بغض النظر عن موارد مدرسته، وصولاً إلى تجربة مختبرية عالمية المستوى."
+      </div>
+    </div>
+    <div class="callout callout-success">
+      <span class="callout-icon">✅</span>
+      <div class="callout-body">
+        <strong>ما يمكن قوله خارجياً الآن</strong>
+        "مؤسستنا تطور منصة مختبر افتراضي مدعومة بالذكاء الاصطناعي مصممة خصيصاً للسياق التعليمي العربي. المنصة في مرحلة النموذج الأولي وستدخل برنامج تجريب متعدد المدارس خلال 18 شهراً."
+      </div>
+    </div>
+    <div class="callout callout-danger">
+      <span class="callout-icon">❌</span>
+      <div class="callout-body">
+        <strong>ما لا يجب قوله حتى يصبح صحيحاً</strong>
+        "منصتنا جاهزة للنشر الوطني" — "لدينا تعليم بالذكاء الاصطناعي مدمج" — "اختبرنا هذا على نطاق واسع"
+      </div>
+    </div>
+
+    <h2>ملخص الفرصة الاستراتيجية</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>البُعد الاستراتيجي</th><th>الفرصة الحالية</th></tr></thead>
+        <tbody>
+          <tr><td>التموضع الأكاديمي</td><td>قيادة تعليم STEM الغامر في العالم العربي</td></tr>
+          <tr><td>الإنتاج البحثي</td><td>2-4 أوراق علمية من برنامج تجريب مُصمَّم جيداً</td></tr>
+          <tr><td>التعبير عن المهمة</td><td>إثبات ملموس للالتزام بالعدالة</td></tr>
+          <tr><td>علاقات الوزارة</td><td>عرض حقيقي لفجوة البنية التحتية في المدارس</td></tr>
+          <tr><td>الجذب التمويلي</td><td>STEM + عدالة + AI + تعليم عربي = مجموعة قابلة للتمويل بقوة</td></tr>
+          <tr><td>الرؤية الدولية</td><td>حضور في المؤتمرات، شراكات بحثية، مصداقية إقليمية</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 07 — RISK REPORT ══ -->
+  <div id="p07" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 07</div>
+      <h1>تقرير المخاطر والتوصيات</h1>
+      <div class="doc-subtitle">تقييم ما قبل الاستثمار — لصانعي القرار واللجان القانونية</div>
+      <div class="hero-badges">
+        <span class="hero-badge">صانعو القرار</span>
+        <span class="hero-badge">اللجنة القانونية</span>
+        <span class="hero-badge">12 خطراً مصنفاً</span>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">🎯</span>
+      <div class="callout-body">
+        <strong>غرض هذا التقرير</strong>
+        قبل أن تلتزم المؤسسة بموارد كبيرة، يجب أن تكون القيادة على دراية بالمخاطر المحددة. هذا التقرير لا يوصي بالتخلي عن المشروع — بل يوصي بالمضي بعيون مفتوحة وبخطوات تخفيف مناسبة.
+      </div>
+    </div>
+
+    <h2>الفئة الأولى: المخاطر التقنية</h2>
+
+    <div class="callout callout-danger">
+      <span class="callout-icon">🔴</span>
+      <div class="callout-body">
+        <strong>الخطر 1.1 — الكود المصدري خارج السيطرة المؤسسية (حرج)</strong>
+        الأثر: إذا أصبح المطور الأصلي غير متاح، لا يوجد تطبيق — فقط APK لا يمكن تعديله.
+        التخفيف: نقل الكود فوري + توثيق قانوني + التحقق من إمكانية إعادة البناء.
+        الحالة بدون تخفيف: <strong>أي استثمار إضافي في خطر تام.</strong>
+      </div>
+    </div>
+
+    <div class="callout callout-danger">
+      <span class="callout-icon">🔴</span>
+      <div class="callout-body">
+        <strong>الخطر 1.2 — جودة الكود وقابلية التوسع مجهولة (عالي)</strong>
+        الأثر: إذا كان الكود ضعيف البنية، قد تتجاوز تكلفة البناء عليه تكلفة البدء من الصفر.
+        التخفيف: مراجعة تقنية متخصصة كمرحلة أولى. تحديد معايير معمارية قبل التطوير.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>الخطر 1.3 — الاعتماد على منصة أجهزة واحدة (متوسط)</strong>
+        الاعتماد على Meta Quest 3 وحده يخلق هشاشة أمام تغييرات الأسعار أو إيقاف المنتج.
+        التخفيف: تطوير التوافق مع نظارات متعددة على المدى المتوسط.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>الخطر 1.4 — تراخيص الأصول ثلاثية الأطراف (عالي)</strong>
+        الأصول ثلاثية الأبعاد قد تحمل قيوداً على الاستخدام التعليمي أو التجاري.
+        التخفيف: مراجعة شاملة لجميع الأصول كجزء من المرحلة الأولى. ميزانية لتطوير أصول مخصصة.
+      </div>
+    </div>
+
+    <h2>الفئة الثانية: المخاطر التربوية</h2>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>الخطر 2.1 — عدم التحقق من توافق المنهج (عالي)</strong>
+        لا دليل على أن التجارب الحالية مُصمَّمة وفق معايير المنهج الوطني.
+        الأثر: المعلمون لا يستطيعون استخدامها كبديل للمحتوى المطلوب.
+        التخفيف: رسم خرائط المنهج في المرحلة الثانية بمشاركة معلمين متمرسين.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>الخطر 2.2 — لا دليل على فاعلية التعلم (عالي)</strong>
+        لا توجد دراسة أو تجريب يُثبت أن الطلاب يتعلمون أفضل بهذه المنصة.
+        الأثر: ادعاءات مبكرة عن نتائج التعلم تُعرّض المؤسسة لخطر المصداقية.
+        التخفيف: تأطير المشروع كمبادرة بحثية لا منتجاً مُثبَتاً — حتى تتوفر البيانات.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟡</span>
+      <div class="callout-body">
+        <strong>الخطر 2.3 — دوار VR وسلامة الطلاب (متوسط)</strong>
+        نسبة من المستخدمين يعانون من دوار أو إجهاد بصري. أجهزة Meta Quest 3 موصى بها للمستخدمين +13 سنة.
+        التخفيف: الالتزام بإرشادات العمر، تحديد جلسات بـ 20-30 دقيقة، تدريب المعلمين على الاستجابة.
+      </div>
+    </div>
+
+    <h2>الفئة الثالثة: مخاطر الملكية الفكرية</h2>
+
+    <div class="callout callout-danger">
+      <span class="callout-icon">🔴</span>
+      <div class="callout-body">
+        <strong>الخطر 3.1 — ملكية الكود غير موثقة (حرج)</strong>
+        المطورون المُعرَّفون في GitHub هم أفراد، ليسوا ممثلين رسميين للمؤسسة. العلاقة القانونية بينهم وبين المؤسسة غير موثقة في السجل العام.
+        الأثر: المؤسسة قد تستثمر في مشروع لا تملكه قانونياً.
+        التخفيف: اتفاقية نقل ملكية فكرية موقّعة قبل أي تمويل.
+      </div>
+    </div>
+
+    <h2>الفئة الرابعة: مخاطر السمعة والعرض</h2>
+
+    <div class="callout callout-danger">
+      <span class="callout-icon">🔴</span>
+      <div class="callout-body">
+        <strong>الخطر 4.1 — العرض قبل الجاهزية التقنية (حرج)</strong>
+        عرض المنصة للوزارة أو وسائل الإعلام قبل أن تكون قوية بما يكفي لتحمل التدقيق الخارجي.
+        الأثر: فشل العرض المباشر أمام مسؤولين يضر بالسمعة بشكل كبير.
+        التخفيف: قائمة تحقق رسمية لجاهزية العرض — المشروع لا يُعرض خارجياً حتى يجتاز معايير محددة.
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">🟠</span>
+      <div class="callout-body">
+        <strong>الخطر 4.2 — المبالغة في وصف قدرات الذكاء الاصطناعي (عالي)</strong>
+        قدرات AI التعليمي غير موجودة حالياً. تقديمها كقائمة في أي عرض سيكون تضليلاً.
+        التخفيف: استخدام صياغة دقيقة: "هدف تطوير المرحلة 3" — لا "منصة مدعومة بـ AI".
+      </div>
+    </div>
+
+    <h2>مصفوفة ملخص المخاطر</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الخطر</th><th>الخطورة</th><th>الاحتمال</th><th>أولوية الإجراء</th></tr></thead>
+        <tbody>
+          <tr><td>الكود خارج السيطرة المؤسسية</td><td><span class="risk-critical">🔴 حرج</span></td><td>عالٍ</td><td>فوري</td></tr>
+          <tr><td>ملكية IP غير موثقة</td><td><span class="risk-critical">🔴 حرج</span></td><td>عالٍ</td><td>فوري</td></tr>
+          <tr><td>العرض قبل الجاهزية</td><td><span class="risk-critical">🔴 حرج</span></td><td>متوسط</td><td>فوري</td></tr>
+          <tr><td>جودة الكود مجهولة</td><td><span class="risk-high">🟠 عالٍ</span></td><td>عالٍ</td><td>المرحلة 1</td></tr>
+          <tr><td>تراخيص الأصول</td><td><span class="risk-high">🟠 عالٍ</span></td><td>متوسط</td><td>المرحلة 1</td></tr>
+          <tr><td>عدم توافق المنهج</td><td><span class="risk-high">🟠 عالٍ</span></td><td>متوسط</td><td>المرحلة 2</td></tr>
+          <tr><td>لا دليل على الفاعلية</td><td><span class="risk-high">🟠 عالٍ</span></td><td>مؤكد (لم يُدرَس بعد)</td><td>المرحلة 5</td></tr>
+          <tr><td>المبالغة في وصف AI</td><td><span class="risk-high">🟠 عالٍ</span></td><td>متوسط</td><td>حوكمة مستمرة</td></tr>
+          <tr><td>فشل اعتماد المعلمين</td><td><span class="risk-medium">🟡 متوسط</span></td><td>متوسط</td><td>المرحلتان 4-5</td></tr>
+          <tr><td>الاعتماد على الأجهزة الأحادية</td><td><span class="risk-medium">🟡 متوسط</span></td><td>منخفض-متوسط</td><td>المرحلة 3+</td></tr>
+          <tr><td>دوار VR والسلامة</td><td><span class="risk-medium">🟡 متوسط</span></td><td>منخفض</td><td>المرحلة 2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>التوصيات النهائية</h2>
+    <div class="card-grid">
+      <div class="card" style="border-top-color:#b30000">
+        <div class="card-title">قبل أي قرار استثمار</div>
+        <div class="card-body">تأمين الكود + توثيق IP + مراجعة تقنية. ثلاثة إجراءات غير قابلة للتفاوض.</div>
+      </div>
+      <div class="card" style="border-top-color:#b35a00">
+        <div class="card-title">قبل أي عرض عام</div>
+        <div class="card-body">قائمة تحقق جاهزية للعرض + رسائل موحدة + موافقة لجنة مشتركة (تقنية + أكاديمية).</div>
+      </div>
+      <div class="card" style="border-top-color:var(--accent)">
+        <div class="card-title">إذا استُوفيت جميع الشروط</div>
+        <div class="card-body">المضي في الاستثمار. المخاطر كلها قابلة للمعالجة. المشروع يستحقها إذا عولجت بشكل صحيح.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 08 — ONE PAGER ══ -->
+  <div id="p08" class="page">
+    <div class="doc-hero">
+      <div class="doc-number">الوثيقة 08</div>
+      <h1>ملخص للرئيس — صفحة واحدة</h1>
+      <div class="doc-subtitle">لمكتب الرئيس / الإدارة العليا | سري</div>
+      <div class="hero-badges">
+        <span class="hero-badge">الرئيس ومجلس الأمناء</span>
+        <span class="hero-badge">قرار مطلوب</span>
+      </div>
+    </div>
+
+    <div class="onepage-grid">
+      <div class="onepage-cell">
+        <h3>💡 الفكرة</h3>
+        <p>مختبر علوم افتراضي داخل نظارة VR — يُمكّن كل طالب من إجراء تجارب علمية حقيقية بيديه، دون مختبر فيزيائي، بالعربية، بلا مواد خطرة، ودون حدود للتكرار.</p>
+      </div>
+      <div class="onepage-cell">
+        <h3>⚠️ المشكلة</h3>
+        <p>نسبة كبيرة من مدارس المجتمع العربي والأطراف لا تمتلك مختبرات علمية وظيفية. الطلاب يدرسون الكيمياء والفيزياء من الكتاب فقط — ولا يُجرون تجربة واحدة طوال مسيرتهم الدراسية.</p>
+      </div>
+      <div class="onepage-cell">
+        <h3>🔬 الحل</h3>
+        <p>VR Future Lab — نموذج أولي وظيفي موجود الآن ومُختبَر على Meta Quest 3. الطالب يلبس النظارة ويدخل مختبراً افتراضياً ويُجري التجربة. الرؤية: منصة كاملة بمرشد AI، لوحة معلم، تحليلات تعليمية، ودعم متعدد المدارس.</p>
+      </div>
+      <div class="onepage-cell">
+        <h3>🌍 الأثر</h3>
+        <p>سدّ فجوة عدالة تعليمية حقيقية. تموضع المؤسسة كرائدة في EdTech العربي. فرصة نشر أكاديمي محكّم. مدخل للتعامل مع وزارة التربية والتعليم. جذب منح وشراكات دولية.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;margin:20px 0;">
+      <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.5px;">📋 الحالة الراهنة بصدق تام</h3>
+      <div class="table-wrap" style="margin:0;">
+        <table>
+          <tbody>
+            <tr><td><strong>تطبيق VR يعمل</strong></td><td><span class="status status-green">✓ موجود — مُختبَر على Meta Quest 3</span></td></tr>
+            <tr><td><strong>الكود المصدري</strong></td><td><span class="status status-red">✗ خارج السيطرة المؤسسية</span></td></tr>
+            <tr><td><strong>ميزات الذكاء الاصطناعي</strong></td><td><span class="status status-orange">رؤية مستقبلية — لا تقنية حالية</span></td></tr>
+            <tr><td><strong>جاهزية النشر في المدارس</strong></td><td><span class="status status-red">✗ يتطلب تطويراً جوهرياً</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2>الاحتياج القادم — 5 إجراءات</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الإجراء</th><th>الإطار الزمني</th></tr></thead>
+        <tbody>
+          <tr><td><span class="risk-critical">🔴</span> نقل الكود المصدري إلى مستودع مؤسسي</td><td>هذا الأسبوع</td></tr>
+          <tr><td><span class="risk-critical">🔴</span> توثيق ملكية فكرية موقّع</td><td>فوري</td></tr>
+          <tr><td><span class="risk-critical">🔴</span> مراجعة تقنية متخصصة (Unity + Meta Quest)</td><td>6-8 أسابيع</td></tr>
+          <tr><td><span class="risk-high">🟠</span> تخصيص فريق تطوير للمرحلة الثانية (MVP)</td><td>بعد المراجعة</td></tr>
+          <tr><td><span class="risk-high">🟠</span> تعيين مالك مؤسسي رسمي للمشروع</td><td>هذا الشهر</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="decision-box">
+      <h3>القرار المطلوب من الإدارة</h3>
+      <p>هل تلتزم المؤسسة بمعاملة VR Future Lab كمشروع مؤسسي استراتيجي — بتمويل منظم وإشراف رسمي وأفق تطوير 24 شهراً — بدلاً من معاملته كمشروع طلابي غير رسمي؟</p>
+      <div class="decision-options">
+        <div class="decision-btn primary">نعم — تفويض المرحلة الأولى فوراً</div>
+        <div class="decision-btn">ربما — المراجعة التقنية أولاً ثم القرار</div>
+        <div class="decision-btn">لا — توثيق وحفظ لمستقبل محتمل</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;padding:20px;border-top:1px solid var(--border);">
+      <p style="font-size:13px;color:var(--muted);">
+        <strong>نافذة الريادة في هذا المجال مفتوحة الآن. لن تبقى كذلك إلى الأبد.</strong>
+      </p>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;">
+        مراجعة مستقلة — مايو 2026 | VR Future Lab Executive Review Package
+      </p>
+    </div>
+  </div>
+
+</div><!-- /#main -->
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionNames = {
+    p00: 'الفهرس العام',
+    p01: 'الملخص التنفيذي',
+    p02: 'الملف الأكاديمي',
+    p03: 'المراجعة التقنية',
+    p04: 'وثيقة رؤية المنتج',
+    p05: 'خارطة التطوير',
+    p06: 'القيمة الاستراتيجية',
+    p07: 'تقرير المخاطر',
+    p08: 'ملخص للرئيس'
+  };
+
+  function showPage(id) {
+    pages.forEach(p => p.classList.remove('active'));
+    navItems.forEach(n => n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const idx = parseInt(id.replace('p',''));
+    navItems[idx].classList.add('active');
+    document.getElementById('topbar-section').textContent = sectionNames[id];
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>
